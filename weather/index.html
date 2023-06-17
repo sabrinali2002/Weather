@@ -17,34 +17,57 @@
       height:500px;
       float:left;
       border: grey solid 10px;
+      margin: 10px;
     }
     #input{
       margin:10px;
     }
+    #navbar {
+            width: 100vw;
+            height: 50px;
+            background-color: lightblue;
+            margin-bottom:10px;
+            padding:5px;
+        }
+  
+        #navbar img {
+            display: block;
+            margin-top:5px;
+            width: 40px;
+            height: 40px;
+            margin: auto;
+            border-radius:20%;
+  
+        }
 
   </style>
 
   <title>Agency</title>
 
-  <link rel="stylesheet" href="./style.css">
-
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href=https://unpkg.com/leaflet@1.9.4/dist/leaflet.css integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-  <script src=https://unpkg.com/leaflet@1.9.4/dist/leaflet.js integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src=https://unpkg.com/leaflet@1.9.4/dist/leaflet.js integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> 
 
 </head>
 
 
 
 <body>
-  <div>
-    <h1>Weather App</h1>
-  </div>
+  <nav id="navbar">
+        <img src="https://i.pinimg.com/564x/06/c4/f7/06c4f70ec5931e2342e703e8a3f0a253.jpg" alt="Logo image">
+    </nav>
+    <div class = "container">
   <div id = "map" style = "align-content:center"></div>
-
-  <form><input id = "input"></input></form>
-
+  <div class = "container">
+  <form><input id = "input" placeholder="Type in a City!"></input></form>
   <button onclick = {executeByCity()} style = "margin:10px">Weather</button>
+  <div id = "outputs">
+  </div>
+  <div>
+</div>
 
   <script>
     var marker;
@@ -151,8 +174,8 @@
         div.appendChild(text);
         div.appendChild(text1);
         div.appendChild(text2);
-
-        document.body.appendChild(div);  
+        const place = document.querySelector('#outputs');;
+        place.appendChild(div);  
 
       });
     }
