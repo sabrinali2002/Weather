@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+
+    #map{
+      width:600px;
+      height:500px;
+      float:left;
+      border: grey solid 10px;
+    }
+    #input{
+      margin:10px;
+    }
+
+  </style>
+
+  <title>Agency</title>
+
+  <link rel="stylesheet" href="./style.css">
+
+  <link rel="stylesheet" href=https://unpkg.com/leaflet@1.9.4/dist/leaflet.css integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <script src=https://unpkg.com/leaflet@1.9.4/dist/leaflet.js integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+</head>
+
+
+
+<body>
+  <div>
+    <h1>Weather App</h1>
+  </div>
+  <div id = "map" style = "align-content:center"></div>
+
+  <form><input id = "input"></input></form>
+
+  <button onclick = {executeByCity()} style = "margin:10px">Weather</button>
+
+  <script>
+    var marker;
+    var map = L.map('map').setView([0,0],1);
+    L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=QZOjQ55UDWGl5sQc2Z5A',{
+      attribution:'<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+    }).addTo(map);
+    map.on('click', function(e) {
+      var s = "http://api.weatherapi.com/v1/current.json?key=c722ececb1094322a31191318231606&q=";
+      s +=e.latlng.lat + ",";
+      s+=e.latlng.lng
+      execute(s);
+    });
+    function executeByCity(){
+
+      const location = document.getElementById("input").value;
+
+      console.log(location);
+
+      const s = "http://api.weatherapi.com/v1/current.json?key=c722ececb1094322a31191318231606&q="+location;
+      try{
+        execute(s);
+      }
+      catch(err){
+        alert("Please input a valid city");
+        console.log("got it");
+      };
+    }
+    function execute(s){
+      fetch(s)
+
+      .then((response)=>response.json())
+
+      .then((data) => {
+        console.log(data);
+        const div = document.createElement('div');
+        try{
+          map.removeLayer(marker);
+        }
+        catch(err){
+          console.log("none");
+        }
+        marker = L.marker([data.location.lat,data.location.lon]).addTo(map);
+        if(document.getElementById("output")){
+          document.getElementById("output").outerHTML = "";
+        }
+        div.id = 'output';
+        div.setAttribute("border","white solid 10px");
+        const str1 = data.location.name+", " + data.location.region; 
+        const str2 = 'Temperature(F): '+data.current.temp_f+' ';
+        const str3 = data.current.condition.text;
+        switch(str3){
+          case 'Sunny':
+          {
+            const img = document.createElement('img');
+            img.setAttribute("src", "./day.svg");
+            div.appendChild(img);
+            break;
+          }
+          case 'Partly cloudy':
+          {
+            const img = document.createElement('img');
+            img.setAttribute("src", "./cloudy-day-1.svg");
+            div.appendChild(img);
+            break;
+          }
+          case 'Cloudy':
+          case 'Overcast':
+          {
+            const img = document.createElement('img');
+            img.setAttribute("src", "./cloudy.svg");
+            div.appendChild(img);
+            break;
+          }
+          case 'Light rain':{
+            const img = document.createElement('img');
+            img.setAttribute("src", "./rainy-5.svg");
+            div.appendChild(img);
+            break;
+          }
+          case 'Heavy rain':{
+            const img = document.createElement('img');
+            img.setAttribute("src", "./rainy-7.svg");
+            div.appendChild(img);
+            break;
+          }
+          case 'Light rain shower':
+          case 'Patchy rain':
+          case 'Patchy rain possible':{
+            const img = document.createElement('img');
+            img.setAttribute("src", "./rainy-4.svg");
+            div.appendChild(img);
+            break;
+          }
+        }
+        const text = document.createElement('h1');
+        text.innerHTML = str1;
+        const text1 = document.createElement('h3');
+        text1.innerHTML = str2;
+        const text2 = document.createElement('h4');
+        text2.innerHTML = str3;
+        // const text = document.createTextNode(str2);
+        // const text1 = document.createTextNode(str3);
+        div.appendChild(text);
+        div.appendChild(text1);
+        div.appendChild(text2);
+
+        document.body.appendChild(div);  
+
+      });
+    }
+
+
+  </script>
+
+</body>
+
+
+
+</html>
